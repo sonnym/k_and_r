@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+bin/build $1
+
+DIFFOUTPUT=$(diff data/out/$1 <(cat data/in/$1 | ./dist/$1))
+EXITSTATUS=$?
+
+if [ $EXITSTATUS != 0 ]
+then
+  printf "\nFailed on: $file\n$DIFFOUTPUT\n"
+fi

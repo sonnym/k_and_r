@@ -5,12 +5,12 @@
  */
 
 #include <stdio.h>
-#define MAXLINE 1000
+#define MAXLINE 20
 
 int get_line(char line[], int maxline);
 void copy(char to[], char from[]);
 
-main() {
+int main() {
   int len;
   int max;
   char line[MAXLINE];
@@ -45,7 +45,11 @@ int get_line(char s[], int lim) {
     i++;
   }
 
-  s[i] = '\0';
+  if (i >= lim) {
+    s[lim - 1] = '\0';
+  } else {
+    s[i] = '\0';
+  }
 
   return i;
 }

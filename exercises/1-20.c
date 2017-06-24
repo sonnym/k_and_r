@@ -11,7 +11,7 @@
 int get_line(char line[], int lim);
 void detab(char original[], char mutated[], int tabstop, int lim);
 
-main() {
+int main() {
   int len;
   char line[MAXLINE];
   char detabbed[MAXLINE];
@@ -31,12 +31,16 @@ int get_line(char s[], int lim) {
     }
   }
 
-  if (c  == '\n') {
+  if (c == '\n') {
     s[i] = c;
     i++;
   }
 
-  s[i] = '\0';
+  if (i >= lim) {
+    s[lim - 1] = '\0';
+  } else {
+    s[i] = '\0';
+  }
 
   return i;
 }
@@ -46,14 +50,21 @@ void detab(char original[], char mutated[], int tabstop, int lim) {
 
   tabs = 0;
 
-  for (i = 0; original[i] != '\0' && i + tabs * (tabstop - 1) < lim; ++i) {
+  for (i = 0; original[i] != '\0' && i + (tabs * (tabstop - 1)) < lim; ++i) {
     if (original[i] == '\t') {
-      for (j = 0; j < tabstop && i + (tabs * (tabstop - 1)) + j < lim; j++) {
-        mutated[i + (tabs * (tabstop - 1)) + j] = ' ';
+      for (j = 0; j < tabstop && i + j + (tabs * (tabstop - 1)) < lim; ++j) {
+        mutated[i + j + (tabs * (tabstop - 1))] = ' ';
       }
+
       tabs++;
     } else {
-      mutated[i + tabs * (tabstop - 1)] = original[j];
+      mutated[i + tabs * (tabstop - 1)] = original[i];
     }
+  }
+
+  if (i + tabs * (tabstop - 1) >= lim) {
+    mutated[lim - 1] = '\0';
+  } else {
+    mutated[i + tabs * (tabstop - 1)] = '\0';
   }
 }

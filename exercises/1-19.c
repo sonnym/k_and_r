@@ -9,7 +9,7 @@
 int get_line(char line[], int maxline);
 void reverse(char s[]);
 
-main() {
+int main() {
   int len;
   char line[MAXLINE];
 
@@ -17,6 +17,8 @@ main() {
     reverse(line);
     printf("%s", line);
   }
+
+  printf("\n");
 
   return 0;
 }
@@ -30,12 +32,16 @@ int get_line(char s[], int lim) {
     }
   }
 
-  if (c  == '\n') {
+  if (c == '\n') {
     s[i] = c;
     i++;
   }
 
-  s[i] = '\0';
+  if (i >= lim) {
+    s[lim - 1] = '\0';
+  } else {
+    s[i] = '\0';
+  }
 
   return i;
 }

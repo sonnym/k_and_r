@@ -7,5 +7,6 @@ EXITSTATUS=$?
 
 if [ $EXITSTATUS != 0 ]
 then
-  printf "\nFailed on: $file\n$DIFFOUTPUT\n"
+  echo "Failed on: $1"
+  echo "$DIFFOUTPUT"
 fi

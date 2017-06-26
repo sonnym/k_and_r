@@ -10,15 +10,15 @@
 #define TABSTOP 4
 
 int get_line(char line[], int lim);
-void detab(char original[], char mutated[], int tabstop);
+void detab(char original[], char mutated[], int tabstop, int limit);
 
-main() {
+int main() {
   int len;
   char line[MAXLINE];
   char entabbed[MAXLINE];
 
   while ((len = get_line(line, MAXLINE)) > 0) {
-    detab(line, entabbed, TABSTOP);
+    detab(line, entabbed, TABSTOP, MAXLINE);
     printf("%s", entabbed);
   }
 }
@@ -32,17 +32,21 @@ int get_line(char s[], int lim) {
     }
   }
 
-  if (c  == '\n') {
+  if (c == '\n') {
     s[i] = c;
     i++;
   }
 
-  s[i] = '\0';
+  if (i >= lim) {
+    s[lim - 1] = '\0';
+  } else {
+    s[i] = '\0';
+  }
 
   return i;
 }
 
-void detab(char original[], char mutated[], int tabstop) {
+void detab(char original[], char mutated[], int tabstop, int lim) {
   int i, j, spaces, tabs;
 
   spaces = 0;
@@ -73,5 +77,11 @@ void detab(char original[], char mutated[], int tabstop) {
 
       mutated[i - tabs * (tabstop - 1)] = original[i];
     }
+  }
+
+  if (i + tabs * (tabstop - 1) >= lim) {
+    mutated[lim - 1] = '\0';
+  } else {
+    mutated[i - tabs * (tabstop - 1)] = '\0';
   }
 }

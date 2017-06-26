@@ -8,63 +8,67 @@
 #define MAXLINE 1000
 #define TABSTOP 4
 
-int get_line(char line[], int lim);
-void detab(char original[], char mutated[], int tabstop, int lim);
+int len;
+char line[MAXLINE];
+char detabbed[MAXLINE];
+
+int get_line(void);
+void detab(void);
 
 int main() {
-  int len;
-  char line[MAXLINE];
-  char detabbed[MAXLINE];
-
-  while ((len = get_line(line, MAXLINE)) > 0) {
-    detab(line, detabbed, TABSTOP, MAXLINE);
+  while (get_line() > 0) {
+    detab();
     printf("%s", detabbed);
   }
 }
 
-int get_line(char s[], int lim) {
+int get_line() {
   int c, i;
+  extern char line[];
 
   for (i = 0; (c = getchar()) != EOF && c != '\n'; ++i) {
-    if (i < lim - 1) {
-      s[i] = c;
+    if (i < MAXLINE - 1) {
+      line[i] = c;
     }
   }
 
   if (c == '\n') {
-    s[i] = c;
+    line[i] = c;
     i++;
   }
 
-  if (i >= lim) {
-    s[lim - 1] = '\0';
+  if (i >= MAXLINE) {
+    line[MAXLINE - 1] = '\0';
   } else {
-    s[i] = '\0';
+    line[i] = '\0';
   }
 
   return i;
 }
 
-void detab(char original[], char mutated[], int tabstop, int lim) {
+void detab() {
   int i, j, tabs;
+
+  extern char line[];
+  extern char detabbed[];
 
   tabs = 0;
 
-  for (i = 0; original[i] != '\0' && i + (tabs * (tabstop - 1)) < lim; ++i) {
-    if (original[i] == '\t') {
-      for (j = 0; j < tabstop && i + j + (tabs * (tabstop - 1)) < lim; ++j) {
-        mutated[i + j + (tabs * (tabstop - 1))] = ' ';
+  for (i = 0; line[i] != '\0' && i + (tabs * (TABSTOP - 1)) < MAXLINE; ++i) {
+    if (line[i] == '\t') {
+      for (j = 0; j < TABSTOP && i + j + (tabs * (TABSTOP - 1)) < MAXLINE; ++j) {
+        detabbed[i + j + (tabs * (TABSTOP - 1))] = ' ';
       }
 
       tabs++;
     } else {
-      mutated[i + tabs * (tabstop - 1)] = original[i];
+      detabbed[i + tabs * (TABSTOP - 1)] = line[i];
     }
   }
 
-  if (i + tabs * (tabstop - 1) >= lim) {
-    mutated[lim - 1] = '\0';
+  if (i + tabs * (TABSTOP - 1) >= MAXLINE) {
+    detabbed[MAXLINE - 1] = '\0';
   } else {
-    mutated[i + tabs * (tabstop - 1)] = '\0';
+    detabbed[i + tabs * (TABSTOP - 1)] = '\0';
   }
 }

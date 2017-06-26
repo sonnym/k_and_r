@@ -9,79 +9,86 @@
 #define MAXLINE 1000
 #define TABSTOP 4
 
-int get_line(char line[], int lim);
-void detab(char original[], char mutated[], int tabstop, int limit);
+char line[MAXLINE];
+char entabbed[MAXLINE];
+
+int get_line(void);
+void entab(void);
 
 int main() {
-  int len;
-  char line[MAXLINE];
-  char entabbed[MAXLINE];
+  extern char line[];
+  extern char entabbedp[];
 
-  while ((len = get_line(line, MAXLINE)) > 0) {
-    detab(line, entabbed, TABSTOP, MAXLINE);
+  while (get_line() > 0) {
+    entab();
     printf("%s", entabbed);
   }
 }
 
-int get_line(char s[], int lim) {
+int get_line() {
   int c, i;
 
+  extern char line[];
+
   for (i = 0; (c = getchar()) != EOF && c != '\n'; ++i) {
-    if (i < lim - 1) {
-      s[i] = c;
+    if (i < MAXLINE - 1) {
+      line[i] = c;
     }
   }
 
   if (c == '\n') {
-    s[i] = c;
+    line[i] = c;
     i++;
   }
 
-  if (i >= lim) {
-    s[lim - 1] = '\0';
+  if (i >= MAXLINE) {
+    line[MAXLINE - 1] = '\0';
   } else {
-    s[i] = '\0';
+    line[i] = '\0';
   }
 
   return i;
 }
 
-void detab(char original[], char mutated[], int tabstop, int lim) {
+void entab() {
   int i, j, spaces, tabs;
+
+  extern char line[];
+  extern char entabbed[];
 
   spaces = 0;
   tabs = 0;
 
-  for (i = 0; original[i] != '\0'; ++i) {
-    if (original[i] == ' ') {
+  for (i = 0; line[i] != '\0'; ++i) {
+    if (line[i] == ' ') {
       ++spaces;
     } else {
-      if (spaces >= tabstop) {
-        for (j = spaces / tabstop; j > 0; --j) {
-          mutated[i - (j * tabstop) - (spaces % tabstop) - tabs * (tabstop - 1)] = '\t';
+      if (spaces >= TABSTOP) {
+        for (j = spaces / TABSTOP; j > 0; --j) {
+          entabbed[i - (j * TABSTOP) - (spaces % TABSTOP) - tabs * (TABSTOP - 1)] = '\t';
           ++tabs;
         }
 
-        for (j = spaces % tabstop; j > 0; --j) {
-          mutated[i - j - tabs * (tabstop - 1)] = ' ';
+        for (j = spaces % TABSTOP; j > 0; --j) {
+          entabbed[i - j - tabs * (TABSTOP - 1)] = ' ';
         }
 
         spaces = 0;
       } else if (spaces > 0) {
         for (j = spaces; j > 0; --j) {
-          mutated[i - j - tabs * (tabstop - 1)] = ' ';
+          entabbed[i - j - tabs * (TABSTOP - 1)] = ' ';
         }
 
         spaces = 0;
       }
 
-      mutated[i - tabs * (tabstop - 1)] = original[i];
+      entabbed[i - tabs * (TABSTOP - 1)] = line[i];
     }
   }
 
-  if (i + tabs * (tabstop - 1) >= lim) {
-    mutated[lim - 1] = '\0';
+  if (i + tabs * (TABSTOP - 1) >= MAXLINE) {
+    entabbed[MAXLINE - 1] = '\0';
   } else {
-    mutated[i - tabs * (tabstop - 1)] = '\0';
+    entabbed[i - tabs * (TABSTOP - 1)] = '\0';
   }
 }

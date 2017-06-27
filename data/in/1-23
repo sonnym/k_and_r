@@ -1,0 +1,17 @@
+/* /* /*
+ * 'foo'
+ * "foo"
+ */
+
+#include <stdio.h>
+
+int main() {
+  int i;/* bar */
+  /* baz */char c;
+
+  c = '/*';
+  c = '*/';
+  i = 1 / 10;
+
+  printf("/* baz */");
+}
